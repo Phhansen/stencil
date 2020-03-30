@@ -2765,13 +2765,6 @@ export interface TransformOptions {
   target?: string;
 }
 
-export interface ResolveModuleIdOptions {
-  moduleId: string;
-  containingFile: string;
-  exts: string[];
-  packageFilter?: (pkg: PackageJsonData) => void;
-}
-
 export interface PlatformPath {
   basename(p: string, ext?: string): string;
   dirname(p: string): string;

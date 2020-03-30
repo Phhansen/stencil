@@ -1,8 +1,8 @@
-import { isExternalUrl, isLocalModule, isStencilCoreImport, isNodeModulePath, setPackageVersionByContent } from '../resolve-utils';
+import * as d from '../../../../declarations';
+import { getStencilInternalDtsPath, isLocalModule, isStencilCoreImport, isNodeModulePath, setPackageVersionByContent } from '../resolve-utils';
 
 describe('resolve modules', () => {
   const pkgVersions = new Map<string, string>();
-
   beforeEach(() => {
     pkgVersions.clear();
   });
@@ -23,19 +23,17 @@ describe('resolve modules', () => {
     expect(isLocalModule('@ionic/core')).toBe(false);
   });
 
-  it('isExternalUrl', () => {
-    expect(isExternalUrl('http://localhost/comiler/stencil.js')).toBe(true);
-    expect(isExternalUrl('https://localhost/comiler/stencil.js')).toBe(true);
-    expect(isExternalUrl('/User/app/node_modules/stencil.js')).toBe(false);
-    expect(isExternalUrl('C:\\path\\to\\local\\index.js')).toBe(false);
-  });
-
   it('isNodeModulePath', () => {
     expect(isNodeModulePath('/path/to/local/module/index.js')).toBe(false);
     expect(isNodeModulePath('/path/to/node_modules/lodash/index.js')).toBe(true);
     expect(isNodeModulePath('/node_modules/lodash/index.js')).toBe(true);
     expect(isNodeModulePath('C:\\path\\to\\node_modules\\lodash\\index.js')).toBe(true);
     expect(isNodeModulePath('C:\\path\\to\\local\\index.js')).toBe(false);
+  });
+
+  it('getStencilInternalDtsPath', () => {
+    expect(getStencilInternalDtsPath('/my-app/')).toBe('/my-app/node_modules/@stencil/core/internal/index.d.ts');
+    expect(getStencilInternalDtsPath('C:\\my-windowz\\')).toBe('C:/my-windowz/node_modules/@stencil/core/internal/index.d.ts');
   });
 
   describe('setPackageVersionByContent', () => {

@@ -6,8 +6,8 @@ import { getCommonDirUrl, getNodeModuleFetchUrl, packageVersions } from '../fetc
 import { isString, normalizeFsPath, normalizePath } from '@utils';
 import resolve, { AsyncOpts } from 'resolve';
 
-export const resolveModuleIdAsync = (config: d.Config, inMemoryFs: d.InMemoryFileSystem, opts: d.ResolveModuleIdOptions) => {
-  const resolverOpts: AsyncOpts = createCustomResolverAsync(config, inMemoryFs, opts.exts);
+export const resolveModuleIdAsync = (sys: d.CompilerSystem, inMemoryFs: d.InMemoryFileSystem, opts: d.ResolveModuleIdOptions) => {
+  const resolverOpts: AsyncOpts = createCustomResolverAsync(sys, inMemoryFs, opts.exts);
   resolverOpts.basedir = dirname(opts.containingFile);
   resolverOpts.packageFilter = opts.packageFilter;
 
@@ -25,7 +25,7 @@ export const resolveModuleIdAsync = (config: d.Config, inMemoryFs: d.InMemoryFil
   });
 };
 
-export const createCustomResolverAsync = (config: d.Config, inMemoryFs: d.InMemoryFileSystem, exts: string[]): any => {
+export const createCustomResolverAsync = (sys: d.CompilerSystem, inMemoryFs: d.InMemoryFileSystem, exts: string[]): any => {
   return {
     async isFile(filePath: string, cb: (err: any, isFile: boolean) => void) {
       const fsFilePath = normalizeFsPath(filePath);
@@ -39,8 +39,8 @@ export const createCustomResolverAsync = (config: d.Config, inMemoryFs: d.InMemo
       if (shouldFetchModule(fsFilePath)) {
         const endsWithExt = exts.some(ext => fsFilePath.endsWith(ext));
         if (endsWithExt) {
-          const url = getNodeModuleFetchUrl(config.sys, packageVersions, fsFilePath);
-          const content = await fetchModuleAsync(config.sys, inMemoryFs, packageVersions, url, fsFilePath);
+          const url = getNodeModuleFetchUrl(sys, packageVersions, fsFilePath);
+          const content = await fetchModuleAsync(sys, inMemoryFs, packageVersions, url, fsFilePath);
           const checkFileExists = typeof content === 'string';
           cb(null, checkFileExists);
           return;
@@ -75,9 +75,9 @@ export const createCustomResolverAsync = (config: d.Config, inMemoryFs: d.InMemo
         }
 
         for (const fileName of COMMON_DIR_FILENAMES) {
-          const url = getCommonDirUrl(config.sys, packageVersions, fsDirPath, fileName);
+          const url = getCommonDirUrl(sys, packageVersions, fsDirPath, fileName);
           const filePath = getCommonDirName(fsDirPath, fileName);
-          const content = await fetchModuleAsync(config.sys, inMemoryFs, packageVersions, url, filePath);
+          const content = await fetchModuleAsync(sys, inMemoryFs, packageVersions, url, filePath);
           if (isString(content)) {
             cb(null, true);
             return;

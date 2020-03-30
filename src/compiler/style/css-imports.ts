@@ -164,7 +164,7 @@ export const isCssNodeModule = (url: string) => url.startsWith('~');
 export const resolveCssNodeModule = async (config: d.Config, compilerCtx: d.CompilerCtx, diagnostics: d.Diagnostic[], filePath: string, cssImportData: d.CssImportData) => {
   try {
     const m = getModuleId(cssImportData.url);
-    const resolved = await resolveModuleIdAsync(config, compilerCtx.fs, {
+    const resolved = await resolveModuleIdAsync(config.sys, compilerCtx.fs, {
       moduleId: m.moduleId,
       containingFile: filePath,
       exts: [],
