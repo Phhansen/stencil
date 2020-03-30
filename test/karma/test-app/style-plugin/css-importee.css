@@ -1,5 +1,8 @@
-
 .css-importee {
   color: blue;
   font-weight: bold;
+}
+
+.css-importee::after {
+  content: ': from css-importee.css';
 }

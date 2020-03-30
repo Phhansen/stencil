@@ -1,4 +1,5 @@
 import { Config } from '../../internal';
+// import { sass } from '@stencil/sass';
 
 export const config: Config = {
   namespace: 'HelloWorld',
@@ -9,9 +10,10 @@ export const config: Config = {
     {
       type: 'www',
       serviceWorker: null,
-      baseUrl: 'https://helloworld.stencil.js.com/'
-    }
+      baseUrl: 'https://helloworld.stencil.js.com/',
+    },
   ],
+  // plugins: [sass()],
   enableCache: false,
   hydratedFlag: null,
   hashFileNames: false,
@@ -21,5 +23,5 @@ export const config: Config = {
     safari10: false,
     scriptDataOpts: false,
     shadowDomShim: false,
-  }
+  },
 };
