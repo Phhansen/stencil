@@ -1,6 +1,6 @@
-@import '~normalize.css';
 @import 'sass-importee';
 @import 'css-importee.css';
+@import '~normalize.css/normalize.css';
 
 .sass-entry {
   color: $sass-entry-color;
@@ -9,4 +9,8 @@
 
 .sass-entry::after {
   content: ': from sass-entry.scss';
+}
+
+hr {
+  background-color: blue;
 }
