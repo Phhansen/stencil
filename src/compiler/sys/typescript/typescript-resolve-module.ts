@@ -77,7 +77,7 @@ export const patchedTsResolveModule = (
   if (isLocalModule(moduleName)) {
     const containingDir = dirname(containingFile);
     let resolvedFileName = join(containingDir, moduleName);
-    resolvedFileName = ensureExtension(resolvedFileName, containingFile);
+    resolvedFileName = normalizePath(ensureExtension(resolvedFileName, containingFile));
 
     if (!isAbsolute(resolvedFileName) && !resolvedFileName.startsWith('.') && !resolvedFileName.startsWith('/')) {
       resolvedFileName = './' + resolvedFileName;
