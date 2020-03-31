@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, Host, h } from '@stencil/core';
 
 @Component({
   tag: 'stylus-cmp',
@@ -7,6 +7,13 @@ import { Component, h } from '@stencil/core';
 })
 export class StylusCmp {
   render() {
-    return [<div class="stylus-entry">Stylus Entry</div>, <div class="stylus-importee">Stylus Importee</div>, <div class="css-importee">Css Importee</div>];
+    return (
+      <Host>
+        <div class="stylus-entry">Stylus Entry</div>
+        <div class="stylus-importee">Stylus Importee</div>
+        <div class="css-importee">Css Importee</div>
+        <hr />
+      </Host>
+    );
   }
 }

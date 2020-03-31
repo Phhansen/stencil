@@ -146,7 +146,7 @@ export const runPluginTransforms = async (config: d.Config, compilerCtx: d.Compi
   return transformResults;
 };
 
-export const runPluginTransformsEsmImports = async (config: d.Config, compilerCtx: d.CompilerCtx, code: string, id: string) => {
+export const runPluginTransformsEsmImports = async (config: d.Config, compilerCtx: d.CompilerCtx, buildCtx: d.BuildCtx, code: string, id: string) => {
   const pluginCtx: PluginCtx = {
     config: config,
     sys: config.sys,
@@ -162,6 +162,14 @@ export const runPluginTransformsEsmImports = async (config: d.Config, compilerCt
     diagnostics: [],
     dependencies: [],
   };
+
+  const isRawCssFile = id.toLowerCase().endsWith('.css');
+  if (isRawCssFile) {
+    // concat all css @imports into one file
+    // when the entry file is a .css file (not .scss)
+    // do this BEFORE transformations on css files
+    transformResults.code = await parseCssImports(config, compilerCtx, buildCtx, id, id, transformResults.code);
+  }
 
   for (const plugin of pluginCtx.config.plugins) {
     if (isFunction(plugin.transform)) {

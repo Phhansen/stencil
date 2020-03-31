@@ -106,8 +106,8 @@ module.exports = function (config) {
     customLaunchers: browserStack ? browserStackLaunchers : {},
     urlRoot: '/__karma__/',
     files: [
-      // 'test-app/prerender-test/karma.spec.ts',
-      'test-app/**/*.spec.ts',
+      'test-app/style-plugin/karma.spec.ts',
+      // 'test-app/**/*.spec.ts',
       'test-app/util.ts',
       { pattern: 'www/**/*', watched: false, included: false, served: true, nocache: true, type: 'module' }
     ],

@@ -59,26 +59,6 @@ describe('typescript resolve module', () => {
     });
   });
 
-  it('windowz, resolve ./stencil-private.d.ts to full dts path when imported by internal dts url', () => {
-    const moduleName = './stencil-private';
-    config.rootDir = 'C:\\some\\path';
-    const containingFile = getStencilInternalDtsPath(config.rootDir);
-    expect(containingFile).toBe('C:/some/path/node_modules/@stencil/core/internal/index.d.ts');
-
-    const r = patchedTsResolveModule(config, inMemoryFs, moduleName, containingFile);
-    expect(r).toEqual({
-      resolvedModule: {
-        extension: ts.Extension.Dts,
-        resolvedFileName: 'C:/some/path/node_modules/@stencil/core/internal/stencil-private.d.ts',
-        packageId: {
-          name: moduleName,
-          subModuleName: '',
-          version: '__VERSION:STENCIL__',
-        },
-      },
-    });
-  });
-
   it('resolve @stencil/core/internal to internal dts url', () => {
     const moduleName = '@stencil/core/internal';
     const containingFile = './cmp.tsx';

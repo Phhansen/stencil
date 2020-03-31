@@ -15,7 +15,7 @@ export const parseCssImports = async (
   styleDocs?: d.StyleDoc[],
 ) => {
   const isCssEntry = resolvedFilePath.toLowerCase().endsWith('.css');
-  return cssImports(config, compilerCtx, buildCtx, isCssEntry, srcFilePath, resolvedFilePath, styleText, [], styleDocs);
+  return cssImports(config, compilerCtx, buildCtx, isCssEntry, srcFilePath, resolvedFilePath, styleText, new Set(), styleDocs);
 };
 
 const cssImports = async (
@@ -26,13 +26,13 @@ const cssImports = async (
   srcFilePath: string,
   resolvedFilePath: string,
   styleText: string,
-  noLoop: string[],
+  noLoop: Set<string>,
   styleDocs?: d.StyleDoc[],
 ) => {
-  if (noLoop.includes(resolvedFilePath)) {
+  if (noLoop.has(resolvedFilePath)) {
     return styleText;
   }
-  noLoop.push(resolvedFilePath);
+  noLoop.add(resolvedFilePath);
 
   if (styleDocs != null) {
     parseStyleDocs(styleDocs, styleText);
@@ -59,7 +59,7 @@ const concatCssImport = async (
   isCssEntry: boolean,
   srcFilePath: string,
   cssImportData: d.CssImportData,
-  noLoop: string[],
+  noLoop: Set<string>,
   styleDocs?: d.StyleDoc[],
 ) => {
   cssImportData.styleText = await loadStyleText(compilerCtx, cssImportData);

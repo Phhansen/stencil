@@ -1,4 +1,4 @@
-import { Component, h } from '@stencil/core';
+import { Component, Host, h } from '@stencil/core';
 
 @Component({
   tag: 'css-cmp',
@@ -7,6 +7,12 @@ import { Component, h } from '@stencil/core';
 })
 export class CssCmp {
   render() {
-    return [<div class="css-entry">Css Entry</div>, <div class="css-importee">Css Importee</div>];
+    return (
+      <Host>
+        <div class="css-entry">Css Entry</div>
+        <div class="css-importee">Css Importee</div>
+        <hr />
+      </Host>
+    );
   }
 }
