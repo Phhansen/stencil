@@ -562,7 +562,7 @@ export interface CompilerSystem {
    * SYNC! Returns undefined if there's an error. Does not throw.
    */
   realpathSync(p: string): string;
-  resolveModuleId?(opts: ResolveModuleIdOptions): Promise<{ resolveId: string; pkgData: any }>;
+  resolveModuleId?(opts: ResolveModuleIdOptions): Promise<ResolveModuleIdResults>;
   resolvePath(p: string): string;
   /**
    * Always returns a boolean if the directory was removed or not. Does not throw.
@@ -609,6 +609,13 @@ export interface ResolveModuleIdOptions {
   containingFile?: string;
   exts?: string[];
   packageFilter?: (pkg: any) => void;
+}
+
+export interface ResolveModuleIdResults {
+  moduleId: string;
+  resolveId: string;
+  pkgData: { name: string; version: string; [key: string]: any };
+  pkgDirPath: string;
 }
 
 export interface WorkerMainController {

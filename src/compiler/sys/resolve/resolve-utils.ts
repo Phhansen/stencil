@@ -49,7 +49,17 @@ export const isStencilCoreImport = (p: string) => p.startsWith('@stencil/core');
 
 export const shouldFetchModule = (p: string) => IS_FETCH_ENV && !IS_NODE_ENV && isNodeModulePath(p);
 
-export const isNodeModulePath = (p: string) => {
+export const isNodeModulePath = (p: string) =>
+  normalizePath(p)
+    .split('/')
+    .includes('node_modules');
+
+export const getPackageDirPath = (p: string, moduleId: string) => {
   const parts = normalizePath(p).split('/');
-  return parts.includes('node_modules');
+  for (let i = parts.length - 1; i >= 1; i--) {
+    if (parts[i - 1] === 'node_modules' && parts[i] === moduleId) {
+      return parts.slice(0, i + 1).join('/');
+    }
+  }
+  return null;
 };

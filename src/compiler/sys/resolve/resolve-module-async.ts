@@ -1,5 +1,5 @@
 import * as d from '../../../declarations';
-import { COMMON_DIR_FILENAMES, getCommonDirName, isCommonDirModuleFile, shouldFetchModule } from './resolve-utils';
+import { COMMON_DIR_FILENAMES, getCommonDirName, getPackageDirPath, isCommonDirModuleFile, shouldFetchModule } from './resolve-utils';
 import { basename, dirname } from 'path';
 import { fetchModuleAsync } from '../fetch/fetch-module-async';
 import { getCommonDirUrl, getNodeModuleFetchUrl, packageVersions } from '../fetch/fetch-utils';
@@ -9,17 +9,31 @@ import resolve, { AsyncOpts } from 'resolve';
 export const resolveModuleIdAsync = (sys: d.CompilerSystem, inMemoryFs: d.InMemoryFileSystem, opts: d.ResolveModuleIdOptions) => {
   const resolverOpts: AsyncOpts = createCustomResolverAsync(sys, inMemoryFs, opts.exts);
   resolverOpts.basedir = dirname(opts.containingFile);
-  resolverOpts.packageFilter = opts.packageFilter;
 
-  return new Promise<{ resolveId: string; pkgData: d.PackageJsonData }>((resolvePromise, rejectPromise) => {
+  if (opts.packageFilter) {
+    resolverOpts.packageFilter = opts.packageFilter;
+  } else if (opts.packageFilter !== null) {
+    resolverOpts.packageFilter = pkg => {
+      if (!isString(pkg.main) || pkg.main === '') {
+        pkg.main = 'package.json';
+      }
+      return pkg;
+    };
+  }
+
+  return new Promise<d.ResolveModuleIdResults>((resolvePromise, rejectPromise) => {
     resolve(opts.moduleId, resolverOpts, (err, resolveId, pkgData: any) => {
       if (err) {
         rejectPromise(err);
       } else {
-        resolvePromise({
-          resolveId: normalizePath(resolveId),
+        resolveId = normalizePath(resolveId);
+        const results: d.ResolveModuleIdResults = {
+          moduleId: opts.moduleId,
+          resolveId,
           pkgData,
-        });
+          pkgDirPath: getPackageDirPath(resolveId, opts.moduleId),
+        };
+        resolvePromise(results);
       }
     });
   });
